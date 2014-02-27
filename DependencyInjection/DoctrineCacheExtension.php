@@ -69,7 +69,7 @@ class DoctrineCacheExtension extends Extension
      * @param array                                                     $config
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder   $container
      */
-    protected function loadCacheProvider($name, array $config, ContainerBuilder $container)
+    public function loadCacheProvider($name, array $config, ContainerBuilder $container)
     {
         $serviceId  = 'doctrine_cache.providers.' . $name;
         $decorator  = $this->getProviderDecorator($container, $config);
@@ -81,7 +81,7 @@ class DoctrineCacheExtension extends Extension
         if ($config['namespace']) {
             $service->addMethodCall('setNamespace', array($config['namespace']));
         }
-
+var_dump($type, $serviceId);
         foreach ($config['aliases'] as $alias) {
             $container->setAlias($alias, $serviceId);
         }
@@ -115,6 +115,7 @@ class DoctrineCacheExtension extends Extension
     protected function getProviderDecorator(ContainerBuilder $container, array $config)
     {
         $type = $config['type'];
+
         $id   = 'doctrine_cache.abstract.' . $type;
 
         if ($type === 'custom_provider') {
@@ -129,6 +130,8 @@ class DoctrineCacheExtension extends Extension
         if ($container->hasDefinition($id)) {
             return new DefinitionDecorator($id);
         }
+
+                  var_dump($id, $container->hasDefinition($id));
 
         throw new \InvalidArgumentException(sprintf('"%s" is an unrecognized Doctrine cache driver.', $type));
     }
